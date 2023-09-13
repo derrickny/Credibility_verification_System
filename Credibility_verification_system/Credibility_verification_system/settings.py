@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -37,6 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    #own
+    'users.apps.PagesConfig',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +80,13 @@ WSGI_APPLICATION = 'Credibility_verification_system.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE':'django.db.backends.postgresql_psycopg2',
+        'NAME': 'postgres',
+        'USER':'postgres',
+        'PASSWORD':'dfNdAbfWcGY7aTSm',
+        'HOST':'db.tgpyjmiogymsgdcoipbb.supabase.co',
+        'PORT':'5432',
+        
     }
 }
 
@@ -121,3 +131,23 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+LOGIN_REDIRECT_URL = 'home'
+
+LOGIN_URL = 'login'
+
+#supabase
+SUPABASE_URL = 'https://azprsjaqrtspexqzkwvr.supabase.co'
+SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6cHJzamFxcnRzcGV4cXprd3ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ0Mjg0NDEsImV4cCI6MjAxMDAwNDQ0MX0.AImB5InnNSfJFk3CkhwTVWsDEEn5h6BsuoKPHnjw-x0'
+
+#LOGIN_URL = 'two_factor:login'
+
+# this one is optional
+# LOGIN_REDIRECT_URL = 'two_factor:profile'
