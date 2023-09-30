@@ -46,7 +46,7 @@
     font-size: 15px;
     border-radius: 6px;
     background-color: #ffcab1;
-    box-shadow: 0 0 10px #ff8248, 0 0 4px #ff8248,0 0 80px #ff8248;
+    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
     transition-delay: 0.1s;
     text-decoration: none;
     border-radius: 9px;
@@ -71,7 +71,7 @@
     font-size: 15px;
     border-radius: 6px;
     background-color: #ffcab1;
-    box-shadow: 0 0 10px #ff8248, 0 0 4px #ff8248,0 0 80px #ff8248;
+    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
     transition-delay: 0.1s;
     text-decoration: none;
     border-radius: 9px;
@@ -146,7 +146,7 @@
   .login-html .sign-in:checked + .tab,
   .login-html .sign-up:checked + .tab{
   color:#fff;
-  border-color:#ff8248;
+  border-color:#2454a6;;
   }
   .login-form{
   min-height:345px;
@@ -180,7 +180,7 @@
   font-size:12px;
   }
   .login-form .group .button{
-  background:#ff8248;
+  background:#2454a6;;
   }
   .login-form .group label .icon{
   width:15px;
@@ -214,7 +214,7 @@
   color:#fff;
   }
   .login-form .group .check:checked + label .icon{
-  background:#ff8248;
+  background:#2454a6;;
   }
   .login-form .group .check:checked + label .icon:before{
   transform:scale(1) rotate(45deg);
@@ -376,7 +376,7 @@
     text-transform: uppercase;
     text-decoration: none;
     font-size: 13px;
-    background-color: #fd5e19;
+    background-color: #2454a6;
     overflow: hidden;
     transition: 0.2s;
   }
@@ -386,7 +386,7 @@
     font-size: 15px;
     border-radius: 6px;
     background-color: #ffcab1;
-    box-shadow: 0 0 10px #ff8248, 0 0 4px #ff8248,0 0 80px #ff8248;
+    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
     transition-delay: 0.1s;
     text-decoration: none;
     border-radius: 9px;

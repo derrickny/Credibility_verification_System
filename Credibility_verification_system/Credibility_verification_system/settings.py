@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+# settings.py
+
+import certifi
+
+# Use certifi to provide trusted certificate authorities
+REQUESTS_CA_BUNDLE = certifi.where()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +38,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    
+    'jazzmin',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     #own
     'users.apps.PagesConfig',
     'crispy_forms',
+    
 ]
 
 MIDDLEWARE = [
@@ -151,3 +161,32 @@ SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 
 # this one is optional
 # LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+
+#jazzmine
+JAZZMIN_UI_TWEAKS = {
+    
+    "theme": "darkly",
+    "dark_mode_theme": "cyborg",
+}
+
+JAZZMIN_SETTINGS = {
+     "site_title": "Admin Panel",
+     
+     "site_header": "Admin Panel",
+     
+     
+    "site_logo": "images/logo3.png",
+    
+    "site_brand": "CVS",
+    
+     "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.Group": "fas fa-users",
+        "Users.users": "fas fa-user"
+        
+    },
+     "show_ui_builder": True,
+    
+
+}
