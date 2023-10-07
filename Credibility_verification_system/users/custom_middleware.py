@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 from django.contrib.auth import logout
 from django.conf import settings
+from django.shortcuts import redirect
 
 class SessionTimerMiddleware:
     def __init__(self, get_response):
@@ -25,8 +26,9 @@ class SessionTimerMiddleware:
                     time_elapsed = (current_time - last_activity_time).total_seconds()
 
                     if time_elapsed > session_timer:
-                        # If the timer has expired, log the user out.
+                        # If the timer has expired, log the user out and redirect.
                         logout(request)
+                        return redirect('logout') 
 
             # Update the 'last_activity' timestamp in the user's session.
             request.session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
