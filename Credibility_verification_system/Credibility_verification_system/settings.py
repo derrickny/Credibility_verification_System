@@ -186,7 +186,11 @@ JAZZMIN_SETTINGS = {
         "Users.users": "fas fa-user"
         
     },
-     "show_ui_builder": True,
+     "show_ui_builder": False,
     
-
+ 
 }
+
+#session 
+
+SESSION_TIMER = 600 # 30 minutes (adjust as needed)

@@ -46,7 +46,7 @@
     font-size: 15px;
     border-radius: 6px;
     background-color: #ffcab1;
-    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
+    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6, 0 0 80px #2454a6;
     transition-delay: 0.1s;
     text-decoration: none;
     border-radius: 9px;
@@ -71,7 +71,7 @@
     font-size: 15px;
     border-radius: 6px;
     background-color: #ffcab1;
-    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
+    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6, 0 0 80px #2454a6;
     transition-delay: 0.1s;
     text-decoration: none;
     border-radius: 9px;
@@ -90,7 +90,6 @@
   body{
   margin:0;
   color:#6a6f8c;
-  background-image: url('images/bg.png');
   font:600 16px/18px 'Open Sans',sans-serif;
   }
   *,:after,:before{box-sizing:border-box}
@@ -146,7 +145,7 @@
   .login-html .sign-in:checked + .tab,
   .login-html .sign-up:checked + .tab{
   color:#fff;
-  border-color:#2454a6;;
+  border-color:#2454a6;
   }
   .login-form{
   min-height:345px;
@@ -214,7 +213,7 @@
   color:#fff;
   }
   .login-form .group .check:checked + label .icon{
-  background:#2454a6;;
+  background:#2454a6;
   }
   .login-form .group .check:checked + label .icon:before{
   transform:scale(1) rotate(45deg);
@@ -246,24 +245,27 @@
   
   
   
-  // Remy function
+ 
   @function remy($value) {
-  @return ($value / 16px) * 1rem;
+    @return ($value / 16px) * 1rem;
   }
-  
-  body {
+
+body {
   font: 100% / 1.414 "Open Sans", "Roboto", arial, sans-serif;
   background: #e9e9e9;
-  }
-  a,
-  [type="submit"] {transition: all .25s ease-in;}
-  .signup__container {
+}
+
+a,
+[type="submit"] {
+  transition: all 0.25s ease-in;
+}
+
+.signup__container {
   position: absolute;
   top: 50%;
   right: 0;
   left: 0;
-  margin-right: auto;
-  margin-left: auto;
+  margin: 0 auto;
   transform: translateY(-50%);
   overflow: hidden;
   display: flex;
@@ -272,22 +274,25 @@
   width: remy(800px);
   height: remy(480px);
   border-radius: remy(3px);
-  box-shadow: 0px remy(3px) remy(7px) rgba(0,0,0,.25);
-  }
-  .signup__overlay {
+  box-shadow: 0px remy(3px) remy(7px) rgba(0, 0, 0, 0.25);
+}
+
+.signup__overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0,0,0,.76);
-  }
-  .container__child {
+  background-color: rgba(0, 0, 0, 0.76);
+}
+
+.container__child {
   width: 50%;
   height: 100%;
   color: #fff;
-  }
-  .signup__thumbnail {
+}
+
+.signup__thumbnail {
   position: relative;
   padding: 2rem;
   display: flex;
@@ -297,99 +302,141 @@
   background-repeat: no-repeat;
   background-position: top center;
   background-size: cover;
-  }
-  .thumbnail__logo,
-  .thumbnail__content,
-  .thumbnail__links {
+}
+
+.thumbnail__logo,
+.thumbnail__content,
+.thumbnail__links {
   position: relative;
   z-index: 2;
-  }
-  .thumbnail__logo {align-self: flex-start;}
-  .logo__shape {fill: #fff;}
-  .logo__text {
+}
+
+.thumbnail__logo {
+  align-self: flex-start;
+}
+
+.logo__shape {
+  fill: #fff;
+}
+
+.logo__text {
   display: inline-block;
-  font-size: .8rem;
+  font-size: 0.8rem;
   font-weight: 700;
   vertical-align: bottom;
-  }
-  .thumbnail__content {align-self: center;}
-  h1,
-  h2 {
+}
+
+.thumbnail__content {
+  align-self: center;
+}
+
+h1,
+h2 {
   font-weight: 300;
-  color: rgba(255,255,255,1);
-  }
-  .heading--primary {font-size: 1.999rem;}
-  .heading--secondary {font-size: 1.414rem;}
-  .thumbnail__links {
+  color: rgba(255, 255, 255, 1);
+}
+
+.heading--primary {
+  font-size: 1.999rem;
+}
+
+.heading--secondary {
+  font-size: 1.414rem;
+}
+
+.thumbnail__links {
   align-self: flex-end;
   width: 100%;
-  }
-  .thumbnail__links a {
+}
+
+.thumbnail__links a {
   font-size: 1rem;
   color: #fff;
-  &:focus,
-  &:hover {color: rgba(255,255,255,.5);}
-  }
-  .signup__form {
+  text-decoration: none; 
+  transition: color 0.25s ease-in; 
+}
+
+.thumbnail__links a:focus,
+.thumbnail__links a:hover {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.signup__form {
   padding: 2.5rem;
   background: #fafafa;
-  }
-  label {
-  font-size: .85rem;
+}
+
+label {
+  font-size: 0.85rem;
   text-transform: uppercase;
   color: #ccc;
-  }
-  .form-control {
+}
+
+.form-control {
   background-color: transparent;
-  border-top: 0;
-  border-right: 0;
-  border-left: 0;
+  border: none; 
+  border-bottom: 1px solid #2454a6;
   border-radius: 0;
-  &:focus {border-color: #111;}
-  }
-  [type="text"] {color: #111;}
-  [type="password"] {color: #111;}
-  .btn--form {
-  padding: .5rem 2.5rem;
-  font-size: .95rem;
+  color: #2454a6;
+  transition: border-color 0.25s ease-in; 
+}
+
+.form-control:focus {
+  border-color:  #2454a6;
+}
+
+.btn--form {
+  padding: 0.5rem 2.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
   text-transform: uppercase;
   color: #fff;
-  background: #111;
+  background: #2454a6;
   border-radius: remy(35px);
-  &:focus,
-  &:hover {background: lighten(#111, 13%);}
-  }
-  .signup__link {
-  font-size: .8rem;
+  cursor: pointer; 
+  transition: background 0.25s ease-in; 
+}
+
+.btn--form:focus,
+.btn--form:hover {
+  background: lighten(#111, 13%);
+  text-decoration: none; // Added to remove underline
+}
+
+.signup__link {
+  font-size: 0.8rem;
   font-weight: 600;
   text-decoration: underline;
   color: #999;
-  &:focus,
-  &:hover {color: darken(#999, 13%);}
-  }
-  #signup-button{
-    position: relative;
-    border-radius: 20px;
-    display: inline-block;
-    padding: 10px 25px;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-size: 13px;
-    background-color: #2454a6;
-    overflow: hidden;
-    transition: 0.2s;
-  }
-  
-  #signup-button:hover{
-    color: #021f3b;
-    font-size: 15px;
-    border-radius: 6px;
-    background-color: #ffcab1;
-    box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6,0 0 80px #2454a6;
-    transition-delay: 0.1s;
-    text-decoration: none;
-    border-radius: 9px;
-  }
+  cursor: pointer; // Added a pointer cursor
+  transition: color 0.25s ease-in; // Added for smooth color transition
+}
 
-  
+.signup__link:focus,
+.signup__link:hover {
+  color: darken(#999, 13%);
+}
+
+#signup-button {
+  position: relative;
+  border-radius: 20px;
+  display: inline-block;
+  padding: 10px 25px;
+  text-transform: uppercase;
+  font-size: 13px;
+  background-color: #2454a6;
+  overflow: hidden;
+  transition: 0.2s;
+  color: #fff; // Added text color
+}
+
+#signup-button:hover {
+  color: #021f3b;
+  font-size: 15px;
+  border-radius: 6px;
+  background-color: #ffcab1;
+  box-shadow: 0 0 10px #2454a6, 0 0 4px #2454a6, 0 0 80px #2454a6;
+  transition-delay: 0.1s;
+  text-decoration: none;
+  border-radius: 9px;
+}
