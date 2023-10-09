@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm , UserChangeForm,PasswordChangeForm
 from django.contrib.auth.hashers import make_password
 from .models import CustomUser
 
@@ -57,3 +57,13 @@ class StatementForm(forms.Form):
         help_text="Enter the date of the statement",
         widget=forms.DateInput(attrs={'type': 'date'})
     )
+
+
+class EditProfileForm(UserChangeForm):
+    class Meta:
+        model = CustomUser 
+        fields = ['first_name','last_name','username', 'email', 'password'] 
+        
+        
+class ChangePasswordForm(PasswordChangeForm):
+    pass

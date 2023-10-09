@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import UserForm, StatementForm
-from django.contrib import messages
+from .forms import UserForm, StatementForm, EditProfileForm,PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from datetime import datetime
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 import traceback
-
+from django.contrib import messages 
 
 # Create your views here.
 def home(request):
@@ -67,7 +66,8 @@ def logout_view(request):
     
     return redirect('logout')  
 
-@login_required() 
+
+@login_required
 def statement(request):
     if request.method == "POST":
         form = StatementForm(request.POST)
@@ -79,10 +79,52 @@ def statement(request):
             statement_date = form.cleaned_data['statement_date']
             
             # Perform further processing or save the data to a database
-            
+
+            # For example, you can create a Statement model and save the data:
+            # statement_obj = Statement(
+            #     statement=statement,
+            #     originator=originator,
+            #     source=source,
+            #     statement_date=statement_date,
+            #     user=request.user  # If you have a ForeignKey to User
+            # )
+            # statement_obj.save()
+
             # Redirect to a success page or another view
-            return redirect('success_page')
+            messages.success(request, 'Statement submitted successfully!')
+            return redirect('success_page')  # Change 'success_page' to your desired URL name
+
     else:
         form = StatementForm()
     
     return render(request, 'users/statement.html', {'form': form})
+
+
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+
+            # Add a success message
+            messages.success(request, 'Your credentials have been changed successfully.')
+
+            return redirect('statement')  # Redirect to the user's profile page
+    else:
+        form = EditProfileForm(instance=request.user)
+
+    return render(request, 'users/edit_profile.html', {'form': form})
+
+
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important for keeping the user logged in
+            return redirect('edit_profile')  # Redirect to the user's profile page after password change
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'users/password.html', {'form': form})
