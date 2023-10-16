@@ -14,7 +14,7 @@ class CustomUserAdmin(UserAdmin):
     # Define the fields you want to include in the user detail view
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
-        ('Personal Info', {'fields': ('first_name', 'last_name')}),
+        ('Names', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser')}),
         ('Important Dates', {'fields': ('last_login', 'date_joined')}),
     )

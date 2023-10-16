@@ -67,3 +67,11 @@ class EditProfileForm(UserChangeForm):
         
 class ChangePasswordForm(PasswordChangeForm):
     pass
+
+
+class OTPForm(forms.Form):
+    otp = forms.CharField(
+        max_length=6,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True
+    )

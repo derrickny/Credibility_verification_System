@@ -1,11 +1,14 @@
 from django.shortcuts import render, redirect
-from .forms import UserForm, StatementForm, EditProfileForm,PasswordChangeForm
+from .forms import UserForm, StatementForm, EditProfileForm,PasswordChangeForm,OTPForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
 from datetime import datetime
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 import traceback
 from django.contrib import messages 
+from .utils import generate_otp, send_otp_email  
+# Your Django view function here
+
 
 # Create your views here.
 def home(request):
@@ -29,10 +32,9 @@ def user_profile(request):
 
 
 
-def login(request):
+def login_view(request):
     if request.method == 'POST':
         try:
-            # Assuming you have a form for user login with 'username' and 'password' fields.
             username = request.POST['username']
             password = request.POST['password']
 
@@ -40,14 +42,24 @@ def login(request):
             user = authenticate(request, username=username, password=password)
 
             if user is not None:
-                # After successful authentication, set the 'last_activity' timestamp in the session
+                # Store the username and last_activity timestamp in the session
+                request.session['username'] = username
                 request.session['last_activity'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f')
 
-                # Log the user in
+                # Generate an OTP
+                otp = generate_otp()
+
+                # Send the OTP to the user's email
+                send_otp_email(user.email, otp)  # Replace 'user.email' with the actual user email field
+
+                # Store the OTP in the session
+                request.session['otp'] = otp
+
+                # Log in the user
                 login(request, user)
 
-                # Redirect to the appropriate page (e.g., user's statement)
-                return redirect('statement')  
+                # Redirect to the OTP verification page
+                return redirect('verify_otp')
         except Exception as e:
             # Handle exceptions here, e.g., log the exception
             traceback.print_exc()
@@ -66,9 +78,10 @@ def logout_view(request):
     
     return redirect('logout')  
 
-
 @login_required
 def statement(request):
+    # Check if the user has a verified OTP
+
     if request.method == "POST":
         form = StatementForm(request.POST)
         if form.is_valid():
@@ -77,7 +90,7 @@ def statement(request):
             originator = form.cleaned_data['originator']
             source = form.cleaned_data['source']
             statement_date = form.cleaned_data['statement_date']
-            
+
             # Perform further processing or save the data to a database
 
             # For example, you can create a Statement model and save the data:
@@ -96,7 +109,7 @@ def statement(request):
 
     else:
         form = StatementForm()
-    
+
     return render(request, 'users/statement.html', {'form': form})
 
 
@@ -128,3 +141,51 @@ def change_password(request):
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'users/password.html', {'form': form})
+
+
+
+@login_required
+def verify_otp(request):
+    error_message = None  # Initialize error message as None
+    success_message = None  # Initialize success message as None
+
+    if request.method == 'POST':
+        # Get the entered OTP from the form
+        form = OTPForm(request.POST)
+        if form.is_valid():
+            entered_otp = form.cleaned_data['otp']
+
+            # Get the stored OTP from the user's session
+            stored_otp = request.user.otp
+
+            if entered_otp == stored_otp:
+                # OTP is valid, allow the user to access statements
+                del request.user.otp  # Remove OTP from the user's model
+                return redirect('statement')  # Redirect to the statements view
+            else:
+                # OTP is invalid, set the error_message
+                error_message = 'The OTP you entered is incorrect. Please check your email for the latest OTP.'
+    else:
+        # Generate and send a new OTP when the page is initially loaded
+        otp = generate_otp()
+        send_otp_email(request.user.email, otp)  # Replace 'request.user.email' with the actual user email field
+        request.user.otp = otp
+        request.user.save()
+
+        # Set the success_message for OTP sent
+        success_message = f'Success! An OTP code has been sent to your Email {hide_email(request.user.email)}.'
+
+    # Display OTP verification form
+    form = OTPForm()
+
+    # Handle the "Back to login" action
+    if 'back_to_login' in request.POST:
+        logout(request)  # Log the user out
+        return redirect('login')  # Redirect to the login page
+
+    return render(request, 'users/verify_otp.html', {'form': form, 'error_message': error_message, 'success_message': success_message})
+
+def hide_email(email):
+    # Helper function to hide part of the email address
+    parts = email.split('@')
+    return f'{parts[0][:3]}***@{parts[1]}'  # Display part of the email

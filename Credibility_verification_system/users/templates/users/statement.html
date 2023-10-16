@@ -3,7 +3,7 @@
 
 {% block content %}
   <div class="container">
-    <h2>Verfiy Statement</h2>
+    <h2>Verify Statement</h2>
     <form method="post">
       {% csrf_token %}
       {{ form|crispy }}

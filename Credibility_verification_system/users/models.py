@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, default="")
     password = models.CharField(max_length=255)
     retype_password = models.CharField(max_length=255)
+    otp = models.CharField(max_length=6, null=True, blank=True)
 
     def __str__(self):
         return self.username 

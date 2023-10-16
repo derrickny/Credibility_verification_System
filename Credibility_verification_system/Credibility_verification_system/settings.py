@@ -162,9 +162,11 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
-LOGIN_REDIRECT_URL = '/statement/'
+LOGIN_REDIRECT_URL = '/verify_otp/'
 
 LOGIN_URL = 'login'
+
+#LOGOUT_REDIRECT_URL = 'logout_bt'
 
 #supabase
 SUPABASE_URL = 'https://azprsjaqrtspexqzkwvr.supabase.co'
