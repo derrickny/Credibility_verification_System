@@ -95,8 +95,8 @@ DATABASES = {
         'ENGINE':'django.db.backends.postgresql_psycopg2',
         'NAME': 'postgres',
         'USER':'postgres',
-        'PASSWORD':'dfNdAbfWcGY7aTSm',
-        'HOST':'db.tgpyjmiogymsgdcoipbb.supabase.co',
+        'PASSWORD':'cabzed-civzeV-2pojqo',
+        'HOST':'db.oysascvwwamrkzmjppdh.supabase.co',
         'PORT':'5432',
         
     }
@@ -169,8 +169,8 @@ LOGIN_URL = 'login'
 #LOGOUT_REDIRECT_URL = 'logout_bt'
 
 #supabase
-SUPABASE_URL = 'https://azprsjaqrtspexqzkwvr.supabase.co'
-SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImF6cHJzamFxcnRzcGV4cXprd3ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTQ0Mjg0NDEsImV4cCI6MjAxMDAwNDQ0MX0.AImB5InnNSfJFk3CkhwTVWsDEEn5h6BsuoKPHnjw-x0'
+SUPABASE_URL = 'https://oysascvwwamrkzmjppdh.supabase.co'
+SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95c2FzY3Z3d2Ftcmt6bWpwcGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc0ODM1ODMsImV4cCI6MjAxMzA1OTU4M30.ruthS5OzMr8frQUADUbrzUWVMChwNlOA3urCGk0CXrc'
 
 #LOGIN_URL = 'two_factor:login'
 
