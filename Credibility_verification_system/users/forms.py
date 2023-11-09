@@ -27,7 +27,7 @@ class UserForm(UserCreationForm):
 
     class Meta:
         model = CustomUser
-        fields = ('first_name', 'last_name', 'username', 'email', 'password1', 'password2')
+        fields = ('first_name', 'last_name','gender','country' ,'username', 'email', 'password1', 'password2')
 
     def save(self, commit=True):
         user = super(UserForm, self).save(commit=False)
@@ -40,23 +40,7 @@ class StatementForm(forms.Form):
     statement = forms.CharField(
         label="Statement",
         widget=forms.Textarea(attrs={'rows': 4}),
-        help_text="Enter your statement here."
-    )
-    originator = forms.CharField(
-        label="Statement Originator",
-        max_length=100,
-        help_text="Enter the originator of the statement."
-    )
-    source = forms.CharField(
-        label="Statement Source",
-        max_length=100,
-        help_text="Enter the source of the statement."
-    )
-    statement_date = forms.DateField(
-        label="Statement Date",
-        help_text="Enter the date of the statement",
-        widget=forms.DateInput(attrs={'type': 'date'})
-    )
+        help_text="Enter your statement here.")
 
 
 class EditProfileForm(UserChangeForm):

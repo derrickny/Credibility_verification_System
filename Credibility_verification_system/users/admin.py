@@ -1,15 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser 
-# Register your models here.
-from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser, Statement, Verdict
 
-from .models import CustomUser  # Import your custom user model
 
 class CustomUserAdmin(UserAdmin):
     # Define the fields you want to display in the user list view
-    list_display = ('username', 'email', 'first_name', 'last_name', 'password')
+    list_display = ('username', 'email', 'first_name', 'last_name','gender','country' ,'password')
 
     # Define the fields you want to include in the user detail view
     fieldsets = (
@@ -35,3 +31,39 @@ class CustomUserAdmin(UserAdmin):
 
 # Register your custom admin class with the CustomUser model
 admin.site.register(CustomUser, CustomUserAdmin)
+
+class StatementAdmin(admin.ModelAdmin):
+    list_display = ('user_id', 'created_at', 'statement')
+
+# Custom admin class for Verdict
+class VerdictAdmin(admin.ModelAdmin):
+    list_display = ('form_id', 'statement_id', 'Statement_verdict', 'predicted_probability')
+
+# Register the Statement and Verdict models with their respective admin classes
+admin.site.register(Statement, StatementAdmin)
+admin.site.register(Verdict, VerdictAdmin)
+
+# Configure Jazzmin settings
+# class MyAdminSite(JazzminSettings):
+#     site_title = "Admin Panel"
+#     site_header = "Admin Panel"
+#     site_logo = "images/logo3.png"
+#     site_brand = "CVS"
+#     show_sidebar = True
+#     navigation_expanded = True
+#     hide_apps = []
+#     hide_models = []
+#     order_with_respect_to = ["auth", "Users", "Verifications"]
+#     icons = {
+#         "auth": "fas fa-users-cog",
+#         "auth.user": "fas fa-user",
+#         "auth.Group": "fas fa-users",
+#         "Users.users": "fas fa-user",
+#         "Users.statement": "fas fa-file-text",
+#         "Users.verdict": "fas fa-clipboard-check",
+#     }
+#     default_icon_parents = "fas fa-chevron-circle-right"
+#     default_icon_children = "fas fa-circle"
+
+# # Create a custom admin site for Jazzmin
+# admin.site = MyAdminSite()

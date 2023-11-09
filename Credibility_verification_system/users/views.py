@@ -7,6 +7,16 @@ from django.contrib.auth import authenticate, login, update_session_auth_hash
 import traceback
 from django.contrib import messages 
 from .utils import generate_otp, send_otp_email  
+from .models import Statement, CustomUser, Form, Verdict
+import re
+from bs4 import BeautifulSoup
+import keras
+from keras.models import load_model  
+import tensorflow as tf
+from keras.preprocessing.sequence import pad_sequences
+from django_tables2 import RequestConfig
+
+
 # Your Django view function here
 
 
@@ -78,39 +88,102 @@ def logout_view(request):
     
     return redirect('logout')  
 
+
+
+
+# Your preprocessing functions
+def strip_html(text):
+    soup = BeautifulSoup(text, "html.parser")
+    return soup.get_text()
+
+def remove_text_before_sentences(text):
+    text = re.sub(r'^[A-Z]+\s*-\s*', '', text)
+    return text
+
+def remove_words_in_parentheses(text):
+    return re.sub(r'\([^)]*\)', '', text)
+
+def remove_dashes(text):
+    return text.replace('-', '')
+
+def remove_symbols(text):
+    pattern = r'[^A-Za-z0-9\s]'
+    return re.sub(pattern, '', text)
+
+def denoise_text(text):
+    text = strip_html(text)
+    text = remove_text_before_sentences(text)
+    text = remove_words_in_parentheses(text)
+    text = remove_dashes(text)
+    text = remove_symbols(text)
+    return text
+
+# Tokenizer settings
+max_features = 20000
+maxlen = 300
+tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=max_features)
+
+
+
+
 @login_required
 def statement(request):
-    # Check if the user has a verified OTP
+    verdict = None
+    probability_percentage = None
 
     if request.method == "POST":
         form = StatementForm(request.POST)
         if form.is_valid():
-            # Process the form data here
-            statement = form.cleaned_data['statement']
-            originator = form.cleaned_data['originator']
-            source = form.cleaned_data['source']
-            statement_date = form.cleaned_data['statement_date']
+            statement_text = form.cleaned_data['statement']
+            cleaned_statement = denoise_text(statement_text)
 
-            # Perform further processing or save the data to a database
+            # Tokenize and pad the input
+            tokenizer.fit_on_texts([cleaned_statement])
+            sequences = tokenizer.texts_to_sequences([cleaned_statement])
+            input_data = pad_sequences(sequences, maxlen=maxlen)
 
-            # For example, you can create a Statement model and save the data:
-            # statement_obj = Statement(
-            #     statement=statement,
-            #     originator=originator,
-            #     source=source,
-            #     statement_date=statement_date,
-            #     user=request.user  # If you have a ForeignKey to User
-            # )
-            # statement_obj.save()
+            # Load your pre-trained model 
+            model = load_model('/Users/nyagaderrick/Developer/136788/Credibility_verification_system/models/cvs_model.h5')
 
-            # Redirect to a success page or another view
-            messages.success(request, 'Statement submitted successfully!')
-            return redirect('success_page')  # Change 'success_page' to your desired URL name
+            # Make a prediction using loaded model
+            predicted_probability = model.predict(input_data)
+            threshold = 0.55 # Adjust the threshold as needed
+            predicted_label = "True" if predicted_probability >= threshold else "False"
+
+            # Save the cleaned statement to  database
+            statement_obj = Statement(
+                user_id=request.user,
+                statement=cleaned_statement
+            )
+            statement_obj.save()
+
+            # Create a Form entry for the current user and statement
+            form_obj = Form(
+                user_id=request.user,
+                statement_id=statement_obj
+            )
+            form_obj.save()
+
+            # Create a Verdict entry with the form and statement references
+            verdict_label = "True" if predicted_label == "True" else "False"
+            verdict_obj = Verdict(
+                form_id=form_obj,
+                statement_id=statement_obj,
+                Statement_verdict=verdict_label,
+                predicted_probability=predicted_probability[0][0] * 100  # Convert to percentage
+            )
+            verdict_obj.save()
+
+            verdict = verdict_label
+            probability_percentage = predicted_probability[0][0] * 100
 
     else:
         form = StatementForm()
 
-    return render(request, 'users/statement.html', {'form': form})
+    return render(request, 'users/statement.html', {'form': form, 'verdict': verdict, 'probability_percentage': probability_percentage})
+
+
+
 
 
 @login_required
@@ -189,3 +262,25 @@ def hide_email(email):
     # Helper function to hide part of the email address
     parts = email.split('@')
     return f'{parts[0][:3]}***@{parts[1]}'  # Display part of the email
+
+
+
+
+def user_dashboard(request):
+    user = request.user
+
+    statements = Statement.objects.filter(user_id=user)
+    verdicts = Verdict.objects.filter(form_id__user_id=user)
+
+    statement_table = StatementTable(statements)
+    verdict_table = VerdictTable(verdicts)
+
+    RequestConfig(request).configure(statement_table)
+    RequestConfig(request).configure(verdict_table)
+
+    context = {
+        'statement_table': statement_table,
+        'verdict_table': verdict_table,
+    }
+
+    return render(request, 'users/user_dashboard.html', context)

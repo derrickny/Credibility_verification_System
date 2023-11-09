@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 import os
 from pathlib import Path
+
 # settings.py
 
 import certifi
@@ -39,8 +40,11 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     
-    'jazzmin',
     
+    
+    #'jazzmin',
+    'admin_tools_stats',
+    'django_nvd3',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -51,6 +55,7 @@ INSTALLED_APPS = [
     #own
     'users.apps.PagesConfig',
     'crispy_forms',
+    'django_countries',
     
 ]
 
@@ -176,34 +181,28 @@ SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 
 # this one is optional
 # LOGIN_REDIRECT_URL = 'two_factor:profile'
-
-
-#jazzmine
 JAZZMIN_UI_TWEAKS = {
-    
-    "theme": "darkly",
-    "dark_mode_theme": "cyborg",
+    "theme": "litera",
 }
 
+# Define the custom section in the admin panel
+# JAZZMIN_SETTINGS
 JAZZMIN_SETTINGS = {
-     "site_title": "Admin Panel",
-     
-     "site_header": "Admin Panel",
-     
-     
+    "site_title": "Admin Panel",
+    "site_header": "Admin Panel",
     "site_logo": "images/logo3.png",
-    
     "site_brand": "CVS",
-    
-     "icons": {
+    "icons": {
         "auth": "fas fa-users-cog",
         "auth.Group": "fas fa-users",
-        "Users.users": "fas fa-user"
-        
+        #"users.users": "fas fa-user",
+        #"users.Statement": "fas fa-file-text",
+        #"users.Verdict": "fas fa-clipboard-check",
     },
-     "show_ui_builder": False,
-    
- 
+    "show_ui_builder": True,
+    "order_with_respect_to": ["Users"],
+   
+    # Additional settings...
 }
 
 #session 
