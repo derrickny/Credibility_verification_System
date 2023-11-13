@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import CustomUser, Statement, Verdict
+from .models import CustomUser, Statement, Verdict, StatementVerdict
 from django.template.loader import render_to_string
 from django.urls import reverse
 from weasyprint import HTML
@@ -25,35 +25,58 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
-class StatementAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'created_at', 'verdict', 'probability_percentage')
+class StatementVerdictAdmin(admin.ModelAdmin):
+    list_display = ('statement_text', 'created_at', 'verdict', 'probability_percentage')
+    actions = ['export_selected_objects']
+
+
+    def statement_text(self, obj):
+        return obj.statement.statement  # Use lowercase 'statement'
+
+    def created_at(self, obj):
+        return obj.statement.created_at  # Use lowercase 'statement'
 
     def verdict(self, obj):
-        verdict_obj = Verdict.objects.filter(statement_id=obj.id).first()
-        return verdict_obj.Statement_verdict if verdict_obj else None
+        return obj.verdict.Statement_verdict  # Use lowercase 'verdict'
 
     def probability_percentage(self, obj):
-        verdict_obj = Verdict.objects.filter(statement_id=obj.id).first()
-        return "{:.2%}".format(verdict_obj.predicted_probability) if verdict_obj else None
+        return "{:.2%}".format(obj.verdict.predicted_probability/100)  # Use lowercase 'verdict'
 
+    statement_text.short_description = 'Statement'
+    created_at.short_description = 'Created At'
     verdict.short_description = 'Verdict'
     probability_percentage.short_description = 'Probability (%)'
     
-    actions = ['export_statements_as_pdf']
+    def export_selected_objects(self, request, queryset):
+        # Render the data to the template
+        html_string = render_to_string('admin/export_statements_pdf.html', {'statement_verdicts': queryset})
 
-    def export_statements_as_pdf(self, request, queryset):
-        html_content = render_to_string('admin/export_statements_pdf.html', {'statements': queryset})
-        pdf_file = HTML(string=html_content).write_pdf()
-        response = HttpResponse(content_type='application/pdf')
-        response['Content-Disposition'] = 'attachment; filename="exported_statements.pdf"'
-        response.write(pdf_file)
+        # Convert the HTML to PDF
+        html = HTML(string=html_string)
+        pdf = html.write_pdf()
+
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(pdf, content_type='application/pdf')
+        response['Content-Disposition'] = 'filename=selected_statement_verdicts.pdf'
         return response
 
-    export_statements_as_pdf.short_description = "Export statements as PDF"
+    export_selected_objects.short_description = "Export selected to PDF"
+    
 
-admin.site.register(Statement, StatementAdmin)
+admin.site.register(StatementVerdict, StatementVerdictAdmin)
+
+
 
 class VerdictAdmin(admin.ModelAdmin):
     list_display = ('form_id', 'statement_id', 'Statement_verdict', 'predicted_probability')
 
 admin.site.register(Verdict, VerdictAdmin)
+
+
+class StatementAdmin(admin.ModelAdmin):
+    list_display = ('user_id', 'statement', 'created_at')
+    
+admin.site.register(Statement, StatementAdmin)
+
+
+

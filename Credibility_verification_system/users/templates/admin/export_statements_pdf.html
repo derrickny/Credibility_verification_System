@@ -28,12 +28,12 @@
             </tr>
         </thead>
         <tbody>
-            {% for statement in statements %}
+            {% for sv in statement_verdicts %}
                 <tr>
-                    <td>{{ statement.statement }}</td>
-                    <td>{{ statement.created_at }}</td>
-                    <td>{{ statement.verdict_obj.Statement_verdict }}</td>
-                    <td>{{ statement.verdict_obj.predicted_probability }}</td>
+                    <td>{{ sv.statement.statement }}</td>
+                    <td>{{ sv.statement.created_at }}</td>
+                    <td>{{ sv.verdict.Statement_verdict }}</td>
+                    <td>{{ sv.verdict.predicted_probability }}</td>
                 </tr>
             {% endfor %}
         </tbody>

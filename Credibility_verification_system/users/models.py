@@ -46,3 +46,15 @@ class Verdict(models.Model):
     statement_id = models.ForeignKey(Statement, on_delete=models.CASCADE)
     Statement_verdict = models.CharField(max_length=255,default="")
     predicted_probability = PercentField(max_digits=5, decimal_places=2)
+    
+    def __str__(self):
+        return self.Statement_verdict  
+    
+    
+class StatementVerdict(models.Model):
+    statement = models.ForeignKey(Statement, on_delete=models.CASCADE)
+    verdict = models.ForeignKey(Verdict, on_delete=models.CASCADE)
+    
+    
+    
+    
