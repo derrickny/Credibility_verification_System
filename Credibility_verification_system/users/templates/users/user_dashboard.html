@@ -1,20 +1,183 @@
 {% extends 'users/base.html' %}
 {% load static %}
-{% load render_table %}
+{% load render_table from django_tables2 %}
 
 {% block content %}
-<div class="container">
-    <h2>User Dashboard</h2>
+  <!-- ... (your existing head content) -->
 
-    <h3>Statements</h3>
-    <div class="table-responsive">
-        {% render_table statement_table %}
+  <!-- Load static files -->
+  <link href="{% static 'path/to/nucleo-svg.css' %}" rel="stylesheet" />
+  <link href="{% static 'path/to/nucleo-icons.css' %}" rel="stylesheet" />
+  <link href="{% static 'path/to/material-dashboard.min.css' %}" rel="stylesheet" />
+  
+  <style>
+    .card-header {
+      font-size: 1.2rem;
+      color: black;
+    }
+  
+    .card-header h6 {
+      font-size: 1.4rem;
+      color: blue;
+    }
+  </style>
+  
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">User Data Table</h6>
+            </div>
+          </div>
+  
+          <div class="card-body px-0 pb-2">
+            <!-- Add form for filtering -->
+            <style>
+                .row.g-1.align-items-center > div {
+                    margin-bottom: 10px;
+                     /* Adjust the margin as needed */
+                }
+            
+                .form-check {
+                    margin-top: 10px; /* Adjust the margin as needed */
+                }
+            </style>
+            
+            <form method="get" action="{% url 'user_dashboard' %}" class="row g-1 align-items-center">
+                {% csrf_token %}
+                
+                <div class="col-md-3">
+                    <label for="start_date" class="form-label">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date" class="form-control date-input" value="{{ start_date }}">
+                </div>
+                <div class="col-md-3">
+                    <label for="end_date" class="form-label">End Date:</label>
+                    <input type="date" id="end_date" name="end_date" class="form-control date-input" value="{{ end_date }}">
+                </div>
+                <div class="col-md-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="verdict_true" name="verdict_true" margin-right="10px"{% if verdict_true == 'true' %}checked{% endif %} value="true">
+                    <label class="form-check-label" for="verdict_true">Verdict True</label>
+                </div>
+                <div class="col-md-2 form-check">
+                    <input type="checkbox" class="form-check-input" id="verdict_false" name="verdict_false" {% if verdict_false == 'true' %}checked{% endif %} value="true">
+                    <label class="form-check-label" for="verdict_false">Verdict False</label>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary">Apply Filters</button>
+                </div>
+            </form>
+            
+            
+            <!-- Table -->
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0" id="exportTable">
+                <!-- Table header -->
+                <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Select</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Statement</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Created At</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Verdict</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Probability (%)</th>
+                        <th class="text-secondary opacity-7">
+                            <button class="btn btn-primary" onclick="exportSelectedData()">Export Data</button>
+                        </th> <!-- Replace 'Actions' with 'Export Data' -->
+                    </tr>
+                <tbody id="exportTableBody">
+                    <!-- Loop through data and populate the table -->
+                    {% for row in data %}
+                    <tr>
+                      <td>
+                        <input type="checkbox"
+                               name="selected_statements"
+                               value="{{ row.statement_id }}"
+                               data-statement="{{ row.truncated_statement }}"
+                               data-created_at="{{ row.created_at|date:'F d, Y H:i A' }}"
+                               data-verdict="{{ row.Statement_verdict }}"
+                               data-probability="{{ row.predicted_probability|floatformat:2 }}">
+                      </td>
+                      
+                        <td id="statement_{{ row.statement_id }}">{{ row.truncated_statement }}</td>
+                        <td id="created_at_{{ row.statement_id }}">{{ row.created_at|date:'F d, Y H:i A' }}</td>
+                        <td id="verdict_{{ row.statement_id }}">{{ row.Statement_verdict }}</td>
+                        <td id="probability_{{ row.statement_id }}">{{ row.predicted_probability|floatformat:2 }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <h3>Verdicts</h3>
-    <div class="table-responsive">
-        {% render_table verdict_table %}
-    </div>
-</div>
-<a class="btn btn-primary" href="{% url 'pdf_export' %}">Export as PDF</a>
+  <!-- ... (your existing scripts) -->
+
+  <!-- Script to handle PDF export -->
+  <!-- Script to handle PDF export -->
+  <!-- Include the correct script tag for pdfMake -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.68/vfs_fonts.js"></script>
+  
+  <script>
+    function exportSelectedData() {
+        var selectedCheckboxes = document.querySelectorAll('input[name="selected_statements"]:checked');
+        var rows = [];
+  
+        selectedCheckboxes.forEach(function (checkbox) {
+            var statementId = checkbox.value;
+            var statementColumn = document.getElementById(`statement_${statementId}`);
+            var statement = checkbox.dataset.statement || '';
+            var truncatedStatement = checkbox.dataset.truncatedStatement || '';
+            var createdAt = checkbox.dataset.created_at || '';
+            var verdict = checkbox.dataset.verdict || '';
+            var probability = checkbox.dataset.probability || '';
+  
+            // Store the original content
+            var originalContent = statementColumn.innerHTML;
+  
+            // Use the full statement for export
+            rows.push([statement, createdAt, verdict, probability]);
+  
+            // Restore the original content after export
+            statementColumn.innerHTML = originalContent;
+        });
+  
+        if (rows.length > 0) {
+            exportToPDF(rows);
+        } else {
+            alert('No statements selected for export.');
+        }
+    }
+  
+    function exportToPDF(rows) {
+        var docDefinition = {
+            content: [
+                { text: 'Exported Statements', style: 'header' },
+                {
+                    table: {
+                        body: [['Statement', 'Created At', 'Verdict', 'Probability (%)']].concat(rows),
+                        widths: ['*', 'auto', 'auto', 'auto'],
+                        bodyStyles: { fontSize: 12, lineHeight: 1.2 }
+                    }
+                }
+            ],
+            styles: {
+                header: { fontSize: 16, bold: true, margin: [0, 0, 0, 10] }
+            }
+        };
+  
+        pdfMake.createPdf(docDefinition).download('exported_data.pdf');
+    }
+  </script>
+  
+
+
+
+
+
+  
 {% endblock %}

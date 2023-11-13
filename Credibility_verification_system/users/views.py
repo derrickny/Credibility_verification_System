@@ -15,7 +15,9 @@ from keras.models import load_model
 import tensorflow as tf
 from keras.preprocessing.sequence import pad_sequences
 from django_tables2 import RequestConfig
-
+from .tables import StatementVerdictTable
+from django.utils.timezone import make_aware
+from django.utils.dateparse import parse_date
 
 # Your Django view function here
 
@@ -266,21 +268,59 @@ def hide_email(email):
 
 
 
+
+@login_required
 def user_dashboard(request):
     user = request.user
 
-    statements = Statement.objects.filter(user_id=user)
-    verdicts = Verdict.objects.filter(form_id__user_id=user)
+    # Fetch statements and verdicts specific to the user and select specific columns
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    verdict_true = request.GET.get('verdict_true')
+    verdict_false = request.GET.get('verdict_false')
 
-    statement_table = StatementTable(statements)
-    verdict_table = VerdictTable(verdicts)
+    try:
+        statements = Statement.objects.filter(user_id=user).values('id', 'statement', 'created_at')
+        verdicts = Verdict.objects.filter(statement_id__user_id=user).values('Statement_verdict', 'predicted_probability')
 
-    RequestConfig(request).configure(statement_table)
-    RequestConfig(request).configure(verdict_table)
+        # Apply date filter
+        if start_date and end_date:
+            start_date = make_aware(datetime.datetime.strptime(start_date, '%Y-%m-%d'))
+            end_date = make_aware(datetime.datetime.strptime(end_date, '%Y-%m-%d'))
+            statements = statements.filter(created_at__range=(start_date, end_date))
+            verdicts = verdicts.filter(statement_id__created_at__range=(start_date, end_date))
 
-    context = {
-        'statement_table': statement_table,
-        'verdict_table': verdict_table,
-    }
+        # Apply verdict filter
+        if verdict_true:
+            verdicts = verdicts.filter(Statement_verdict=True)
 
-    return render(request, 'users/user_dashboard.html', context)
+        if verdict_false:
+            verdicts = verdicts.filter(Statement_verdict=False)
+
+        # Combine data from statements and verdicts
+        data = []
+        for statement, verdict in zip(statements, verdicts):
+            data.append({
+                'statement_id': statement['id'],
+                'truncated_statement': statement['statement'][:50] + '...' if len(statement['statement']) > 50 else statement['statement'],
+                'created_at': statement['created_at'],
+                'Statement_verdict': verdict['Statement_verdict'],
+                'predicted_probability': verdict['predicted_probability'],
+            })
+
+        context = {
+            'data': data,
+            'start_date': start_date,
+            'end_date': end_date,
+            'verdict_true': verdict_true,
+            'verdict_false': verdict_false,
+        }
+        return render(request, 'users/user_dashboard.html', context)
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        raise  # Re-raise the exception to see the full traceback in the console
+
+
+# def tables(request):
+#     return render(request, 'users/tables.html')

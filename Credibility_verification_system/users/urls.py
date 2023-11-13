@@ -14,6 +14,8 @@ urlpatterns = [
     path('password/', views.change_password, name='password'),
     path('verify_otp/', views.verify_otp, name= 'verify_otp'),
     path('admin_tools_stats/', include('admin_tools_stats.urls')),
-    path('user_dashboard/', views.user_dashboard,name='user_dashboard')
+    path('user_dashboard/', views.user_dashboard,name='user_dashboard'),
+    #path('tables/', views.tables, name= 'tables')
 
 ]
+

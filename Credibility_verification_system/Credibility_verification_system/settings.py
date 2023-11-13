@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import os
 from pathlib import Path
 
+#own
+os.environ['DYLD_LIBRARY_PATH'] = '/opt/homebrew/lib:/opt/homebrew/Cellar/glib/2.78.1/lib'
+
+
 # settings.py
 
 import certifi
@@ -52,10 +56,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
+    
     #own
     'users.apps.PagesConfig',
     'crispy_forms',
     'django_countries',
+    'django_tables2'
     
 ]
 
@@ -207,4 +213,4 @@ JAZZMIN_SETTINGS = {
 
 #session 
 
-SESSION_TIMER = 600
+SESSION_TIMER = 10000

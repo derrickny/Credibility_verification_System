@@ -1,0 +1,80 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- ... (your existing head content) -->
+
+  <!-- Load static files -->
+  <link href="{% static 'path/to/nucleo-svg.css' %}" rel="stylesheet" />
+  <link href="{% static 'path/to/nucleo-icons.css' %}" rel="stylesheet" />
+  <link href="{% static 'path/to/material-dashboard.min.css' %}" rel="stylesheet" />
+</head>
+
+<body class="g-sidenav-show  bg-gray-200">
+  <!-- ... (your existing body content) -->
+
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <div class="card my-4">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+              <h6 class="text-white text-capitalize ps-3">User Data Table</h6>
+            </div>
+          </div>
+          <div class="card-body px-0 pb-2">
+            <div class="table-responsive p-0">
+              <table class="table align-items-center mb-0">
+                <!-- Table header -->
+                <thead>
+                  <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Statement</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Created At</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Verdict</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Probability (%)</th>
+                    <th class="text-secondary opacity-7">Actions</th>
+                  </tr>
+                </thead>
+                <!-- Table body -->
+                <tbody>
+                  <!-- Loop through statements and verdicts and populate the table -->
+                  {% for data_row in table.data %}
+                  <tr>
+                    <td>{{ data_row.statement }}</td>
+                    <td>{{ data_row.created_at|date:"F d, Y H:i A" }}</td>
+                    <td>{{ data_row.Statement_verdict }}</td>
+                    <td>{{ data_row.predicted_probability|floatformat:2 }}%</td>
+                    <td>
+                      <!-- Add a button to export the row data as PDF -->
+                      <button class="btn btn-primary" onclick="exportToPDF('{{ data_row.statement }}', '{{ data_row.created_at }}', '{{ data_row.Statement_verdict }}', '{{ data_row.predicted_probability }}')">Export to PDF</button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ... (your existing scripts) -->
+
+  <!-- Script to handle PDF export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  <script>
+    function exportToPDF(statement, createdAt, verdict, probability) {
+      const pdf = new jsPDF();
+      pdf.text(`Statement: ${statement}`, 10, 10);
+      pdf.text(`Created At: ${createdAt}`, 10, 20);
+      pdf.text(`Verdict: ${verdict}`, 10, 30);
+      pdf.text(`Probability: ${probability}%`, 10, 40);
+      pdf.save('exported_data.pdf');
+    }
+  </script>
+</body>
+
+</html>

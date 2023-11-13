@@ -6,7 +6,7 @@
 <link rel="stylesheet" href="{% static 'css/main.css' %}">
 <div class="container">
     <h2>Verify Statement</h2>
-    <form method="post">
+    <form method="post" style="width: 900px;">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Submit</button>

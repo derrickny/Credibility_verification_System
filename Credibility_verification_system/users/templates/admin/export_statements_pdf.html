@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exported Statements</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Exported Statements</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Statement</th>
+                <th>Created At</th>
+                <th>Verdict</th>
+                <th>Probability (%)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for statement in statements %}
+                <tr>
+                    <td>{{ statement.statement }}</td>
+                    <td>{{ statement.created_at }}</td>
+                    <td>{{ statement.verdict_obj.Statement_verdict }}</td>
+                    <td>{{ statement.verdict_obj.predicted_probability }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
