@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from .fields import PercentField
 from django_countries.fields import CountryField
+from django.utils import timezone
+
 
 
     
@@ -51,10 +53,14 @@ class Verdict(models.Model):
         return self.Statement_verdict  
     
     
+
 class StatementVerdict(models.Model):
     statement = models.ForeignKey(Statement, on_delete=models.CASCADE)
     verdict = models.ForeignKey(Verdict, on_delete=models.CASCADE)
-    
+    dummy_date = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return f'{self.statement} - {self.verdict} - {self.dummy_date}'
     
     
     

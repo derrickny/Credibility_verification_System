@@ -3,3 +3,6 @@ Credibility_verification_system/Credibility_verification_system/__pycache__/sett
 Credibility_verification_system/Credibility_verification_system/__pycache__/settings.cpython-310.pyc
 Credibility_verification_system/Credibility_verification_system/__pycache__/settings.cpython-310.pyc
 /Users/nyagaderrick/Developer/136788/Credibility_verification_system/Credibility_verification_system/settings.py
+*.csv
+data/glove.twitter.27B.100d.txt
+*.zip

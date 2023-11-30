@@ -40,7 +40,7 @@ class StatementForm(forms.Form):
     statement = forms.CharField(
         label="Statement",
         widget=forms.Textarea(attrs={'rows': 4}),
-        help_text="Enter your statement here.")
+        help_text="Enter your statement here. Note: The model might display an inaccurate verdict to a statement, so please double check the Verdict it provides.")
 
 
 class EditProfileForm(UserChangeForm):
