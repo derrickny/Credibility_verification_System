@@ -1,0 +1,27 @@
+# Use an official Python runtime as a parent image
+FROM python:3.11.7
+
+# pythonunbuffered is used to avoid buffering the output of the python app to the terminal
+#buffering means that the output of the python app is first stored in a buffer before it is written to the terminal
+#this helps in identifying the error in the code by showing the error in the terminal as soon as it occurs
+ENV PYTHONUNBUFFERED=1
+
+#set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements.txt file into the Docker image
+COPY requirements.txt /app/requirements.txt
+
+# Install the Python packages
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy the current directory contents into the container at /app
+COPY . .
+
+# Make port 80 available to the world outside this container
+EXPOSE 80
+
+
+CMD ["python", "manage.py", "runserver"]
+
+

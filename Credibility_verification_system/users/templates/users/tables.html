@@ -63,16 +63,24 @@
 
   <!-- ... (your existing scripts) -->
 
+
   <!-- Script to handle PDF export -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
   <script>
     function exportToPDF(statement, createdAt, verdict, probability) {
       const pdf = new jsPDF();
-      pdf.text(`Statement: ${statement}`, 10, 10);
-      pdf.text(`Created At: ${createdAt}`, 10, 20);
-      pdf.text(`Verdict: ${verdict}`, 10, 30);
-      pdf.text(`Probability: ${probability}%`, 10, 40);
-      pdf.save('exported_data.pdf');
+      pdf.setFontSize(14);
+      pdf.text('Statement Details:', 10, 10);
+      pdf.setFontSize(12);
+
+      // Split the statement into multiple lines if it's too long
+      var splitStatement = pdf.splitTextToSize(`Statement: ${statement}`, 180);
+      pdf.text(splitStatement, 10, 20);
+
+      pdf.text(`Created At: ${createdAt}`, 10, 30 + splitStatement.length * 6);
+      pdf.text(`Verdict: ${verdict}`, 10, 40 + splitStatement.length * 6);
+      pdf.text(`Probability: ${probability}%`, 10, 50 + splitStatement.length * 6);
+      pdf.save('statement_details.pdf');
     }
   </script>
 </body>

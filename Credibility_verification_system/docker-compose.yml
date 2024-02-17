@@ -1,0 +1,30 @@
+
+
+# The base image
+services:
+# the database service
+  db:
+    image: postgres:latest # The image name
+    volumes: # a volume is a directory that is outside the container and is used to store data
+      - postgres_data:/var/lib/postgresql/data # this is the volume that will be created
+    environment: # environment variables
+      POSTGRES_USER: nyagaderrick  # the username for the database
+      POSTGRES_PASSWORD: '' #the password for the database
+      POSTGRES_DB: CVS  #the name of the database
+    ports: #the host port : the container port
+      - "5430:5432" # the port that the database will be running on
+
+#the django service
+  django:
+    image: credibility_verification_system:0.0.1 # The image name
+    build: .  
+    ports: #the host port : the container port
+      - "8000:8000"
+    depends_on: # this is used to specify the order in which the services should be started
+      - db
+
+# the volumes that will be created, a volume is a directory that is outside the container and is used to store data
+#it is used to persist data even after the container is destroyed or stopped
+volumes:
+  postgres_data:
+      

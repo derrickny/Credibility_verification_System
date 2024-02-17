@@ -6,7 +6,7 @@ from datetime import datetime
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 import traceback
 from django.contrib import messages 
-from .utils import generate_otp, send_otp_email  
+from .utils import generate_otp, send_otp_email ,check_otp
 from .models import Statement, CustomUser, Form, Verdict
 import re
 from bs4 import BeautifulSoup
@@ -18,7 +18,7 @@ from django_tables2 import RequestConfig
 from .tables import StatementVerdictTable
 from django.utils.timezone import make_aware
 from django.utils.dateparse import parse_date
-
+from django.utils import timezone
 # Your Django view function here
 
 
@@ -149,7 +149,7 @@ def statement(request):
 
             # Make a prediction using loaded model
             predicted_probability = model.predict(input_data)
-            threshold = 0.55 # Adjust the threshold as needed
+            threshold = 0.5 # Adjust the threshold as needed
             predicted_label = "True" if predicted_probability >= threshold else "False"
 
             # Save the cleaned statement to  database
@@ -230,22 +230,26 @@ def verify_otp(request):
         if form.is_valid():
             entered_otp = form.cleaned_data['otp']
 
-            # Get the stored OTP from the user's session
-            stored_otp = request.user.otp
-
-            if entered_otp == stored_otp:
-                # OTP is valid, allow the user to access statements
-                del request.user.otp  # Remove OTP from the user's model
+            # Check the entered OTP using the check_otp function
+            otp_status = check_otp(request, entered_otp)
+            if otp_status == 'valid':
+                # OTP is valid and not expired, allow the user to access statements
+                del request.session['otp']  # Remove OTP from the user's session
+                del request.session['otp_time']  # Remove OTP time from the user's session
                 return redirect('statement')  # Redirect to the statements view
+            elif otp_status == 'expired':
+                # OTP is expired, log the user out and redirect to login page
+                logout(request)
+                return redirect('login')
             else:
                 # OTP is invalid, set the error_message
                 error_message = 'The OTP you entered is incorrect. Please check your email for the latest OTP.'
     else:
         # Generate and send a new OTP when the page is initially loaded
-        otp = generate_otp()
+        otp = generate_otp(request)
         send_otp_email(request.user.email, otp)  # Replace 'request.user.email' with the actual user email field
-        request.user.otp = otp
-        request.user.save()
+        request.session['otp'] = otp  # Store the OTP in the user's session
+        request.session['otp_time'] = str(timezone.now())
 
         # Set the success_message for OTP sent
         success_message = f'Success! An OTP code has been sent to your Email {hide_email(request.user.email)}.'
@@ -259,6 +263,7 @@ def verify_otp(request):
         return redirect('login')  # Redirect to the login page
 
     return render(request, 'users/verify_otp.html', {'form': form, 'error_message': error_message, 'success_message': success_message})
+
 
 def hide_email(email):
     # Helper function to hide part of the email address

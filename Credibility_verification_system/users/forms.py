@@ -40,7 +40,8 @@ class StatementForm(forms.Form):
     statement = forms.CharField(
         label="Statement",
         widget=forms.Textarea(attrs={'rows': 4}),
-        help_text="Enter your statement here. Note: The model might display an inaccurate verdict to a statement, so please double check the Verdict it provides.")
+        max_length=200,  # Limit the statement to 200 characters
+        help_text="Enter your statement here. Note: The model might display an inaccurate verdict to a statement, so please double check the Verdict it provides. Maximum length is 200 characters.")
 
 
 class EditProfileForm(UserChangeForm):

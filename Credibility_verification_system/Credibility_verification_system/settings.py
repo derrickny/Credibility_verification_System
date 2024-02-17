@@ -101,17 +101,22 @@ WSGI_APPLICATION = 'Credibility_verification_system.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+
+
+
 DATABASES = {
     'default': {
-        'ENGINE':'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'ENGINE':'django.db.backends.postgresql',
+        'NAME': 'CVS',
         'USER':'postgres',
-        'PASSWORD':'cabzed-civzeV-2pojqo',
-        'HOST':'db.oysascvwwamrkzmjppdh.supabase.co',
-        'PORT':'5432',
-        
+        'PASSWORD':'',
+        'HOST':'localhost',
+        'PORT':'5430',  
     }
 }
+
+
+
 
 
 # Email Backend Configuration
@@ -179,9 +184,9 @@ LOGIN_URL = 'login'
 
 #LOGOUT_REDIRECT_URL = 'logout_bt'
 
-#supabase
-SUPABASE_URL = 'https://oysascvwwamrkzmjppdh.supabase.co'
-SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95c2FzY3Z3d2Ftcmt6bWpwcGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc0ODM1ODMsImV4cCI6MjAxMzA1OTU4M30.ruthS5OzMr8frQUADUbrzUWVMChwNlOA3urCGk0CXrc'
+# #supabase
+# SUPABASE_URL = 'https://oysascvwwamrkzmjppdh.supabase.co'
+# SUPABASE_API_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im95c2FzY3Z3d2Ftcmt6bWpwcGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTc0ODM1ODMsImV4cCI6MjAxMzA1OTU4M30.ruthS5OzMr8frQUADUbrzUWVMChwNlOA3urCGk0CXrc'
 
 #LOGIN_URL = 'two_factor:login'
 
