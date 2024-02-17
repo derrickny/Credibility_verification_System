@@ -104,29 +104,7 @@ WSGI_APPLICATION = 'Credibility_verification_system.wsgi.application'
 
 
 
-DATABASES = {
-    'default': {
-        'ENGINE':'django.db.backends.postgresql',
-        'NAME': 'CVS',
-        'USER':'postgres',
-        'PASSWORD':'',
-        'HOST':'localhost',
-        'PORT':'5430',  
-    }
-}
 
-
-
-
-
-# Email Backend Configuration
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # Replace with your preferred backend
-
-EMAIL_HOST = 'smtp.gmail.com'  # Replace with your email host
-EMAIL_PORT = 587  # Replace with your email port
-EMAIL_USE_TLS = True  # Set to False if your email server doesn't use TLS
-EMAIL_HOST_USER = 'derricknyaga007@gmail.com'  # Replace with your email username
-EMAIL_HOST_PASSWORD = 'ydilhiqbjgoesubj'  # Replace with your email password
 
 
 
