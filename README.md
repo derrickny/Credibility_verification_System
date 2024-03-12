@@ -5,7 +5,7 @@ The project involves tasks such as data preprocessing, exploratory data analysis
 
 The evaluation metrics, such as accuracy, precision, recall, and F1 score, are employed to assess the performance of the models. The project provides insights into the efficiency of different algorithms in handling the fact-checking task and aims to contribute to the field of automated content verification.
 
-model_and_analysis.ipynb:
+### model_and_analysis.ipynb:
 
 This notebook encompasses the entire data science pipeline, starting with data exploration and preprocessing, followed by model creation and analysis. The steps involved are:
 
@@ -14,7 +14,8 @@ Data Preprocessing: The textual data undergoes preprocessing steps such as text 
 Exploratory Data Analysis (EDA): Comprehensive EDA is conducted to understand the distribution of verdicts, uncover patterns, and identify potential features. Visualizations are used to illustrate key findings.
 Feature Engineering: Relevant features are engineered, especially focusing on extracting meaningful information from the textual statements using techniques like TF-IDF and word embeddings.
 Model Building: Various machine learning algorithms are employed to build classification models. This includes traditional algorithms such as Logistic Regression and SVM, as well as ensemble methods made up of Random Forest, svm and Logistic Regression . Model performance metrics are computed, and models are fine-tuned accordingly.
-NLP_model.ipynb:
+
+### NLP_model.ipynb:
 
 This notebook is dedicated to the creation of a Natural Language Processing (NLP) model using GloVe embeddings. The main highlights include:
 
