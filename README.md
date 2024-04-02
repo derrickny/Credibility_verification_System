@@ -30,7 +30,7 @@ By separating the tasks into these two notebooks, the project maintains a clear 
 
 ### Deployment with Django Framework
 
-#### verview
+#### overview
 After developing and evaluating the machine learning models for fact-checking statements, the next step was to deploy the model using the Django framework. Django provides a robust environment for building web applications, making it an ideal choice for deploying machine learning models into production.
 
 #### Steps for Deployment
@@ -40,4 +40,4 @@ After developing and evaluating the machine learning models for fact-checking st
 - Request Handling: Django's views were utilized to handle incoming requests from the web interface. When a user submits a statement for fact-checking, Django processes the input, passes it to the deployed model, and returns the verdict to the user.
 
 ### Conclusion
-Deploying the machine learning model using the Django framework enables easy access and utilization of the fact-checking functionality. B
+Deploying the machine learning model using the Django framework enables easy access and utilization of the fact-checking functionality. 
